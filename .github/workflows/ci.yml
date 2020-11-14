@@ -54,3 +54,26 @@ jobs:
           $env:path += ";$(get-location)"
           cd ./prune
           v -prod -os windows -o prune_win build main.v
+
+  macos:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout V
+        uses: actions/checkout@v2
+        with:
+          repository: vlang/v
+
+      - name: Build V
+        run: |
+          make
+          sudo ./v symlink
+
+      - name: Checkout source code
+        uses: actions/checkout@v2
+        with:
+          path: prune
+
+      - name: Build prune
+        run: |
+          cd ./prune
+          v -prod -os macos -o prune_osx build main.v
