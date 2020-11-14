@@ -15,9 +15,9 @@ If you are using `unix` style system(`macOS`/`Linux`). enter the command line to
 
 ```shell
 # install the latest version
-curl -fsSL https://raw.githubusercontent.com/axetroy/prune/master/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/axetroy/prune/main/install.sh | bash
 # install the specified version
-curl -fsSL https://raw.githubusercontent.com/axetroy/prune/master/install.sh | bash -s v0.5.0
+curl -fsSL https://raw.githubusercontent.com/axetroy/prune/main/install.sh | bash -s v0.2.2
 ```
 
 Or download [the release file](https://github.com/axetroy/prune/releases) for your platform and put it to `$PATH` folder.
