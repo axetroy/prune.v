@@ -1,6 +1,6 @@
 module main
 
-import os { ls, join_path, getwd, is_dir, is_file, rmdir, rm, file_size }
+import os { ls, join_path, getwd, is_dir, is_file, is_link, rmdir, rm, file_size }
 import sync { RwMutex }
 import flag
 
