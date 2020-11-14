@@ -5,7 +5,7 @@
 ![License](https://img.shields.io/github/license/axetroy/prune.svg)
 ![Repo Size](https://img.shields.io/github/repo-size/axetroy/prune.svg)
 
-A tool to prune your file-system written in [vlang](https://github.com/vlang/v)
+An extremely fast tool for prune your file-system written in [vlang](https://github.com/vlang/v)
 
 The tool will traverse the target directory, look for files/directories that can be deleted (eg. `node_modules`/`bower_components`/`.temp`/`.dist`) and delete them to free up your hard disk space.
 
