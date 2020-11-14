@@ -32,34 +32,52 @@ SOURCE CODE:
 struct Result {
 	check_mode bool
 mut:
+	folder     int // folder count
+	file       int // file count
 	size       int // the prune size
 	mtx        &sync.RwMutex // r/w lock
 }
 
-fn (mut r Result) add(i int) {
+fn (mut r Result) increase_size(i int) {
 	r.mtx.w_lock()
 	r.size += i
 	r.mtx.w_unlock()
 }
 
-fn calc_size(filepath string) int {
+fn (mut r Result) increase_folder(i int) {
+	r.mtx.w_lock()
+	r.folder += i
+	r.mtx.w_unlock()
+}
+
+fn (mut r Result) increase_file(i int) {
+	r.mtx.w_lock()
+	r.file += i
+	r.mtx.w_unlock()
+}
+
+fn calc_size(filepath string, mut result Result) int {
 	if is_dir(filepath) {
 		files := ls(filepath) or {
 			panic(err)
 		}
+		result.increase_folder(1)
 		mut size := 0
 		for file in files {
 			target := join_path(filepath, file)
 			if is_dir(target) {
-				size += calc_size(target)
+				size += calc_size(target, mut result)
 			} else if is_link(target) {
+				result.increase_file(1)
 				size += file_size(target)
 			} else if is_file(target) {
+				result.increase_file(1)
 				size += file_size(target)
 			}
 		}
 		return size
 	} else {
+		result.increase_file(1)
 		return file_size(filepath)
 	}
 }
@@ -107,30 +125,30 @@ fn main() {
 		go walk(target, mut wg, mut &result)
 	}
 	wg.wait()
-	println('prune size: $result.size Bytes')
+	println('prune $result.folder folder & $result.file file & $result.size Bytes')
 }
 
 fn remove_dir(dir string, mut group sync.WaitGroup, mut result Result) {
-	size := calc_size(dir)
+	size := calc_size(dir, mut result)
 	if result.check_mode == false {
 		rmdir(dir) or {
 			panic(err)
 		}
 	}
 	println(dir)
-	result.add(size)
+	result.increase_size(size)
 	group.done()
 }
 
 fn remove_file(file string, mut group sync.WaitGroup, mut result Result) {
-	size := calc_size(file)
+	size := calc_size(file, mut result)
 	if result.check_mode == false {
 		rm(file) or {
 			panic(err)
 		}
 	}
 	println(file)
-	result.add(size)
+	result.increase_size(size)
 	group.done()
 }
 
