@@ -24,7 +24,7 @@ EXAMPLE:
   prune ./dir1 ./dir2 ./dir3
 
 SOURCE CODE:
-	https://github.com/axetroy/prune
+  https://github.com/axetroy/prune
 ')
 }
 
