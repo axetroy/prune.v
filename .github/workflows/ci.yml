@@ -95,3 +95,36 @@ jobs:
           name: macos
           path: ./prune/prune_osx
           if-no-files-found: error
+
+  release:
+    name: Release to Github
+    if: startsWith(github.ref, 'refs/tags/') && github.repository == 'axetroy/prume'
+    needs: [linux, windows, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: linux
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: windows
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: macos
+
+      - name: ls
+        run: |
+          ls -lh
+          ls -lh prune
+
+      # - uses: softprops/action-gh-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      #   with:
+      #     files: |
+      #       bin/gmock_darwin_amd64.tar.gz
+      #       bin/gmock_linux_amd64.tar.gz
+      #       bin/gmock_windows_amd64.tar.gz
+      #     draft: false
