@@ -17,7 +17,7 @@ Download [the release file](https://github.com/axetroy/prune/releases) for your 
 
 ```sh
 $ prune --help
-prune - A tool to prune your file-system
+prune - A tool for prune your file-system
 
 USAGE:
   prune [OPTIONS] <dirs>

@@ -11,7 +11,7 @@ const (
 )
 
 fn print_help() {
-	print('prune - A tool to prune your file-system
+	print('prune - A tool for prune your file-system
 
 USAGE:
   prune [OPTIONS] <dirs>
