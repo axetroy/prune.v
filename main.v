@@ -41,20 +41,26 @@ mut:
 
 fn (mut r Result) increase_size(i int) {
 	r.mtx.w_lock()
+	defer {
+		r.mtx.w_unlock()
+	}
 	r.size += i
-	r.mtx.w_unlock()
 }
 
 fn (mut r Result) increase_folder(i int) {
 	r.mtx.w_lock()
+	defer {
+		r.mtx.w_unlock()
+	}
 	r.folder += i
-	r.mtx.w_unlock()
 }
 
 fn (mut r Result) increase_file(i int) {
 	r.mtx.w_lock()
+	defer {
+		r.mtx.w_unlock()
+	}
 	r.file += i
-	r.mtx.w_unlock()
 }
 
 fn calc_size(filepath string, mut result Result) int {
@@ -119,6 +125,8 @@ fn main() {
 	mut result := Result{
 		check_mode: is_check_only
 		size: 0
+		folder: 0
+		file: 0
 		mtx: sync.new_rwmutex()
 	}
 	mut wg := sync.new_waitgroup()
@@ -130,7 +138,7 @@ fn main() {
 	end := now().unix_time_milli()
 	diff_time := end - start
 	println('prune $result.folder folder & $result.file file & $result.size Bytes')
-	println("finish in $diff_time ms")
+	println('finish in $diff_time ms')
 }
 
 fn remove_dir(dir string, mut group sync.WaitGroup, mut result Result) {
