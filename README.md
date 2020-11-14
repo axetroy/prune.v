@@ -23,15 +23,15 @@ USAGE:
   prune [OPTIONS] <dirs>
 
 OPTIONS:
-  --help      print help information
-  --version   print version information
+  --help        print help information
+  --version     print version information
+  --check-only  where check prune only without any file remove
 
 EXAMPLE:
   prune ./dir1 ./dir2 ./dir3
 
 SOURCE CODE:
-        https://github.com/axetroy/prune
-
+  https://github.com/axetroy/prune
 $ prune ./src
 ```
 
