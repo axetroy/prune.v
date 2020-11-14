@@ -9,7 +9,7 @@ on:
       - "**"
 
 jobs:
-  build:
+  linux:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout V
@@ -32,7 +32,7 @@ jobs:
           cd ./prune
           v -prod -os linux -o prune_linux build main.v
 
-  windows-msvc:
+  windows:
     runs-on: windows-latest
     steps:
       - name: Checkout V
@@ -51,5 +51,6 @@ jobs:
 
       - name: Build prune
         run: |
+          $env:path += ";$(get-location)"
           cd ./prune
           v -prod -os linux -o prune_linux build main.v
