@@ -53,4 +53,4 @@ jobs:
         run: |
           $env:path += ";$(get-location)"
           cd ./prune
-          v -prod -os linux -o prune_linux build main.v
+          v -prod -os windows -o prune_win build main.v
