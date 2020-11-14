@@ -107,7 +107,7 @@ fn main() {
 		go walk(target, mut wg, mut &result)
 	}
 	wg.wait()
-	print('prune size: $result.size Bytes')
+	println('prune size: $result.size Bytes')
 }
 
 fn remove_dir(dir string, mut group sync.WaitGroup, mut result Result) {
