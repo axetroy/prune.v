@@ -111,8 +111,8 @@ jobs:
       - name: tar
         run: |
           mv prune_linux prune && tar czf prune_linux.tar.gz prune && rm prune
-          mv prune_macos prune && tar czf prune_macos.tar.gz prune && rm prune
-          mv prune_win.exe prune.exe && tar czf prune_windows.tar.gz prune.exe && rm prune.exe
+          mv prune_osx prune && tar czf prune_osx.tar.gz prune && rm prune
+          mv prune_win.exe prune.exe && tar czf prune_win.tar.gz prune.exe && rm prune.exe
           ls -lh
 
       - uses: softprops/action-gh-release@v1
@@ -121,6 +121,6 @@ jobs:
         with:
           files: |
             prune_linux.tar.gz
-            prune_macos.tar.gz
-            prune_windows.tar.gz
+            prune_osx.tar.gz
+            prune_win.tar.gz
           draft: false
