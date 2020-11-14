@@ -4,7 +4,7 @@ import os { ls, join_path, getwd, is_dir, is_file, rmdir, rm }
 import sync
 
 const (
-	dir_prune = ["node_modules"]
+	dir_prune = ["node_modules", "bower_components", ".temp", ".dist"]
 	file_prune = [".DS_Store"]
 )
 
