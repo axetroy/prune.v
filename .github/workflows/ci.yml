@@ -108,17 +108,19 @@ jobs:
         with:
           name: macos
 
-      - name: ls
+      - name: tar
         run: |
+          mv prune_linux prune && tar czf prune_linux.tar.gz prune && rm prune
+          mv prune_macos prune && tar czf prune_macos.tar.gz prune && rm prune
+          mv prune_win.exe prune.exe && tar czf prune_windows.tar.gz prune.exe && rm prune.exe
           ls -lh
-          ls -lh prune
 
-      # - uses: softprops/action-gh-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      #   with:
-      #     files: |
-      #       bin/gmock_darwin_amd64.tar.gz
-      #       bin/gmock_linux_amd64.tar.gz
-      #       bin/gmock_windows_amd64.tar.gz
-      #     draft: false
+      - uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          files: |
+            prune_linux.tar.gz
+            prune_macos.tar.gz
+            prune_windows.tar.gz
+          draft: false
