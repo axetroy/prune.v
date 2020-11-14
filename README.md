@@ -11,7 +11,16 @@ The tool will traverse the target directory, look for files/directories that can
 
 ## Installation
 
-Download [the release file](https://github.com/axetroy/prune/releases) for your platform and put it to `$PATH` folder.
+If you are using `unix` style system(`macOS`/`Linux`). enter the command line to install.
+
+```shell
+# install the latest version
+curl -fsSL https://raw.githubusercontent.com/axetroy/prune/master/install.sh | bash
+# install the specified version
+curl -fsSL https://raw.githubusercontent.com/axetroy/prune/master/install.sh | bash -s v0.5.0
+```
+
+Or download [the release file](https://github.com/axetroy/prune/releases) for your platform and put it to `$PATH` folder.
 
 ## Usage
 
