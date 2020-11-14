@@ -24,7 +24,7 @@ fn main() {
 	}
 
 	if targets.len<1 {
-		panic(error('target dir required'))
+		panic('target dir required')
 	}
 
 	mut wg := sync.new_waitgroup()
