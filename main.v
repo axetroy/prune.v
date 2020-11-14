@@ -5,7 +5,7 @@ import sync
 import flag
 
 const (
-	version    = 'v0.1.0'
+	version    = 'v0.1.1'
 	dir_prune  = ['node_modules', 'bower_components', '.temp', '.dist']
 	file_prune = ['.DS_Store']
 )
