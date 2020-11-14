@@ -42,8 +42,7 @@ jobs:
 
       - name: Build V
         run: |
-          make
-          sudo ./v symlink
+          .\make.bat -msvc
 
       - name: Checkout source code
         uses: actions/checkout@v2
@@ -53,4 +52,4 @@ jobs:
       - name: Build prune
         run: |
           cd ./prune
-          v -prod -os windows -o prune_win build main.v
+          v -prod -os linux -o prune_linux build main.v
