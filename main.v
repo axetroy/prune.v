@@ -3,6 +3,7 @@ module main
 import os { ls, join_path, getwd, is_dir, is_file, is_link, rmdir, rm, file_size }
 import sync { RwMutex }
 import flag
+import time { now }
 
 const (
 	version    = 'v0.2.3'
@@ -114,6 +115,7 @@ fn main() {
 		print_help()
 		return
 	}
+	start := now().unix_time_milli()
 	mut result := Result{
 		check_mode: is_check_only
 		size: 0
@@ -125,7 +127,10 @@ fn main() {
 		go walk(target, mut wg, mut &result)
 	}
 	wg.wait()
+	end := now().unix_time_milli()
+	diff_time := end - start
 	println('prune $result.folder folder & $result.file file & $result.size Bytes')
+	println("finish in $diff_time ms")
 }
 
 fn remove_dir(dir string, mut group sync.WaitGroup, mut result Result) {
