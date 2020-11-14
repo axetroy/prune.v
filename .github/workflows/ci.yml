@@ -98,7 +98,7 @@ jobs:
 
   release:
     name: Release to Github
-    if: startsWith(github.ref, 'refs/tags/') && github.repository == 'axetroy/prume'
+    if: startsWith(github.ref, 'refs/tags/') && github.repository == 'axetroy/prune'
     needs: [linux, windows, macos]
     runs-on: ubuntu-latest
     steps:
