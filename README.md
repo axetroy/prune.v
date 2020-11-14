@@ -16,7 +16,23 @@ Download [the release file](https://github.com/axetroy/prune/releases) for your 
 ## Usage
 
 ```sh
-prune ./src
+$ prune --help
+prune - A tool to prune your file-system
+
+USAGE:
+  prune [OPTIONS] <dirs>
+
+OPTIONS:
+  --help      print help information
+  --version   print version information
+
+EXAMPLE:
+  prune ./dir1 ./dir2 ./dir3
+
+SOURCE CODE:
+        https://github.com/axetroy/prune
+
+$ prune ./src
 ```
 
 ## Build from source
