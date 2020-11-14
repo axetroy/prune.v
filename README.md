@@ -38,7 +38,7 @@ $ prune ./src
 ## Build from source
 
 ```sh
-sh ./build.sh
+$ make
 ```
 
 ## LICENSE
