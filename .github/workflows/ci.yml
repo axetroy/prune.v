@@ -35,7 +35,8 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: linux
-          path: prune_linux
+          path: ./prune/prune_linux
+          if-no-files-found: error
 
   windows:
     runs-on: windows-latest
@@ -63,7 +64,8 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: windows
-          path: prune_win.exe
+          path: ./prune/prune_win.exe
+          if-no-files-found: error
 
   macos:
     runs-on: macos-latest
@@ -91,4 +93,5 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: macos
-          path: prune_osx
+          path: ./prune/prune_osx
+          if-no-files-found: error
