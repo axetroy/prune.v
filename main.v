@@ -149,6 +149,7 @@ fn remove_dir(dir string, mut group sync.WaitGroup, mut result Result) {
 		}
 	}
 	println(dir)
+	result.increase_folder(1)
 	result.increase_size(size)
 	group.done()
 }
@@ -161,6 +162,7 @@ fn remove_file(file string, mut group sync.WaitGroup, mut result Result) {
 		}
 	}
 	println(file)
+	result.increase_file(1)
 	result.increase_size(size)
 	group.done()
 }
