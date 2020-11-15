@@ -27,7 +27,7 @@ get_os(){
 main() {
     local os=$(get_os)
     # local arch=$(get_arch)
-    local dest_file="${downloadFolder}/gmock_${os}.tar.gz"
+    local dest_file="${downloadFolder}/prune_${os}.tar.gz"
 
     if [[ $os -eq "darwin" ]]; then
         os="osx"
@@ -42,7 +42,7 @@ main() {
         if [[ ! "$asset_path" ]]; then exit 1; fi
         asset_uri="https://github.com${asset_path}"
     else
-        asset_uri="https://github.com/axetroy/prune/releases/download/${1}/gmock_${os}\\.tar.gz"
+        asset_uri="https://github.com/axetroy/prune/releases/download/${1}/prune_${os}\\.tar.gz"
     fi
 
     mkdir -p ${downloadFolder}
