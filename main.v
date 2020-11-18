@@ -7,8 +7,8 @@ import time { now }
 import pool { new_pool }
 
 const (
-	version    = 'v0.2.4'
-	dir_ignore = ['.git', '.github', '.idea']
+	version    = 'v0.2.5'
+	dir_ignore = ['.git', '.github', '.idea', '.vscode']
 	dir_prune  = ['node_modules', 'bower_components', '.temp', '.dist']
 	file_prune = [
 		/* macos */
