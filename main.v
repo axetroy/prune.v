@@ -4,6 +4,7 @@ import os { ls, join_path, getwd, is_dir, is_file, is_link, rmdir, rm, file_size
 import sync { RwMutex }
 import flag
 import time { now }
+import runtime { nr_cpus }
 import pool { new_pool }
 
 const (
@@ -133,7 +134,8 @@ fn main() {
 		print_help()
 		return
 	}
-	mut pool := new_pool(10)
+	cpus_num := nr_cpus()
+	mut pool := new_pool(cpus_num)
 	start := now().unix_time_milli()
 	mut result := Result{
 		check_mode: is_check_only

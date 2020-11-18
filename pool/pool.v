@@ -14,7 +14,7 @@ pub fn new_pool(size int) &Pool {
 	if size <= 0 {
 		s = 1
 	}
-	queue := chan int{cap: s} // buffer length 100
+	queue := chan int{cap: s}
 	return &Pool{
 		size: s
 		queue: queue

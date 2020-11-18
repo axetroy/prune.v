@@ -9,6 +9,12 @@ An extremely fast tool for prune your file-system written in [V](https://github.
 
 The tool will traverse the target directory, look for files/directories that can be deleted (eg. `node_modules`/`bower_components`/`.temp`/`.dist`) and delete them to free up your hard disk space.
 
+## Feature
+
+- [x] Remove extra stuff to make room for your hard drive
+- [x] Written in [V](https://github.com/vlang/v)
+- [x] Coroutine support, make full use of CPU. It's fast
+
 ## Installation
 
 If you are using `unix` style system(`macOS`/`Linux`). enter the command line to install.
