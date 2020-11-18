@@ -23,7 +23,7 @@ If you are using `unix` style system(`macOS`/`Linux`). enter the command line to
 # install the latest version
 curl -fsSL https://raw.githubusercontent.com/axetroy/prune/main/install.sh | bash
 # install the specified version
-curl -fsSL https://raw.githubusercontent.com/axetroy/prune/main/install.sh | bash -s v0.2.5
+curl -fsSL https://raw.githubusercontent.com/axetroy/prune/main/install.sh | bash -s v0.2.6
 ```
 
 Or download [the release file](https://github.com/axetroy/prune/releases) for your platform and put it to `$PATH` folder.
