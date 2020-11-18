@@ -21,6 +21,11 @@ jobs:
         with:
           path: prune
 
+      - name: Format
+        run: |
+          cd ./prune
+          make format-check
+
       - name: Build prune
         run: |
           cd ./prune
