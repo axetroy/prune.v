@@ -4,11 +4,23 @@ import os { ls, join_path, getwd, is_dir, is_file, is_link, rmdir, rm, file_size
 import sync { RwMutex }
 import flag
 import time { now }
+import pool { new_pool }
 
 const (
 	version    = 'v0.2.4'
+	dir_ignore = ['.git', '.github', '.idea']
 	dir_prune  = ['node_modules', 'bower_components', '.temp', '.dist']
-	file_prune = ['.DS_Store']
+	file_prune = [
+		/* macos */
+		'.DS_Store',
+		'.AppleDouble',
+		'.LSOverride',
+		/* windows */
+		'Thumbs.db',
+		'Thumbs.db:encryptable',
+		'ehthumbs.db',
+		'ehthumbs_vista.db',
+	]
 )
 
 fn print_help() {
@@ -121,6 +133,7 @@ fn main() {
 		print_help()
 		return
 	}
+	mut pool := new_pool(10)
 	start := now().unix_time_milli()
 	mut result := Result{
 		check_mode: is_check_only
@@ -129,19 +142,21 @@ fn main() {
 		file: 0
 		mtx: sync.new_rwmutex()
 	}
-	mut wg := sync.new_waitgroup()
-	wg.add(targets.len)
 	for _, target in targets {
-		go walk(target, mut wg, mut &result)
+		pool.add(1)
+		go walk(target, mut pool, mut &result)
 	}
-	wg.wait()
+	pool.wait()
 	end := now().unix_time_milli()
 	diff_time := end - start
 	println('prune $result.folder folder & $result.file file & $result.size Bytes')
 	println('finish in $diff_time ms')
 }
 
-fn remove_dir(dir string, mut group sync.WaitGroup, mut result Result) {
+fn remove_dir(dir string, mut pool pool.Pool, mut result Result) {
+	defer {
+		pool.done()
+	}
 	size := calc_size(dir, mut result)
 	if result.check_mode == false {
 		rmdir(dir) or {
@@ -151,10 +166,12 @@ fn remove_dir(dir string, mut group sync.WaitGroup, mut result Result) {
 	println(dir)
 	result.increase_folder(1)
 	result.increase_size(size)
-	group.done()
 }
 
-fn remove_file(file string, mut group sync.WaitGroup, mut result Result) {
+fn remove_file(file string, mut pool pool.Pool, mut result Result) {
+	defer {
+		pool.done()
+	}
 	size := calc_size(file, mut result)
 	if result.check_mode == false {
 		rm(file) or {
@@ -164,28 +181,47 @@ fn remove_file(file string, mut group sync.WaitGroup, mut result Result) {
 	println(file)
 	result.increase_file(1)
 	result.increase_size(size)
-	group.done()
 }
 
-fn walk(dir string, mut group sync.WaitGroup, mut result Result) {
+fn walk(dir string, mut pool pool.Pool, mut result Result) {
+	mut is_done := false
 	files := ls(dir) or {
 		panic(err)
+	}
+	defer {
+		if is_done == false {
+			pool.done()
+		}
 	}
 	for file in files {
 		filepath := join_path(dir, file)
 		if is_dir(filepath) {
-			group.add(1)
 			if file in dir_prune {
-				go remove_dir(filepath, mut group, mut result)
+				if is_done == false {
+					pool.done()
+				}
+				is_done = true
+				pool.add(1)
+				go remove_dir(filepath, mut pool, mut result)
+			} else if file in dir_ignore {
+				continue
 			} else {
-				go walk(filepath, mut group, mut result)
+				if is_done == false {
+					pool.done()
+				}
+				is_done = true
+				pool.add(1)
+				go walk(filepath, mut pool, mut result)
 			}
 		} else if is_file(filepath) {
 			if file in file_prune {
-				group.add(1)
-				go remove_file(filepath, mut group, mut result)
+				if is_done == false {
+					pool.done()
+				}
+				is_done = true
+				pool.add(1)
+				go remove_file(filepath, mut pool, mut result)
 			}
 		}
 	}
-	group.done()
 }
