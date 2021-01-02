@@ -12,11 +12,11 @@ const (
 	dir_ignore = ['.git', '.github', '.idea', '.vscode']
 	dir_prune  = ['node_modules', 'bower_components', '.temp', '.dist']
 	file_prune = [
-		/* macos */
+		/* macos */
 		'.DS_Store',
 		'.AppleDouble',
 		'.LSOverride',
-		/* windows */
+		/* windows */
 		'Thumbs.db',
 		'Thumbs.db:encryptable',
 		'ehthumbs.db',
@@ -78,9 +78,7 @@ fn (mut r Result) increase_file(i int) {
 
 fn calc_size(filepath string, mut result Result) int {
 	if is_dir(filepath) {
-		files := ls(filepath) or {
-			panic(err)
-		}
+		files := ls(filepath) or { panic(err) }
 		result.increase_folder(1)
 		mut size := 0
 		for file in files {
@@ -135,7 +133,7 @@ fn main() {
 		return
 	}
 	cpus_num := nr_cpus()
-	mut pool := new_pool(cpus_num)
+	mut pool := new_pool(cpus_num * 255)
 	start := now().unix_time_milli()
 	mut result := Result{
 		check_mode: is_check_only
@@ -161,9 +159,7 @@ fn remove_dir(dir string, mut pool pool.Pool, mut result Result) {
 	}
 	size := calc_size(dir, mut result)
 	if result.check_mode == false {
-		rmdir(dir) or {
-			panic(err)
-		}
+		rmdir(dir) or { panic(err) }
 	}
 	println(dir)
 	result.increase_folder(1)
@@ -176,9 +172,7 @@ fn remove_file(file string, mut pool pool.Pool, mut result Result) {
 	}
 	size := calc_size(file, mut result)
 	if result.check_mode == false {
-		rm(file) or {
-			panic(err)
-		}
+		rm(file) or { panic(err) }
 	}
 	println(file)
 	result.increase_file(1)
@@ -186,41 +180,24 @@ fn remove_file(file string, mut pool pool.Pool, mut result Result) {
 }
 
 fn walk(dir string, mut pool pool.Pool, mut result Result) {
-	mut is_done := false
-	files := ls(dir) or {
-		panic(err)
-	}
 	defer {
-		if is_done == false {
-			pool.done()
-		}
+		pool.done()
 	}
+	files := ls(dir) or { panic(err) }
 	for file in files {
 		filepath := join_path(dir, file)
 		if is_dir(filepath) {
 			if file in dir_prune {
-				if is_done == false {
-					pool.done()
-				}
-				is_done = true
 				pool.add(1)
 				go remove_dir(filepath, mut pool, mut result)
 			} else if file in dir_ignore {
 				continue
 			} else {
-				if is_done == false {
-					pool.done()
-				}
-				is_done = true
 				pool.add(1)
 				go walk(filepath, mut pool, mut result)
 			}
 		} else if is_file(filepath) {
 			if file in file_prune {
-				if is_done == false {
-					pool.done()
-				}
-				is_done = true
 				pool.add(1)
 				go remove_file(filepath, mut pool, mut result)
 			}
