@@ -29,12 +29,12 @@ jobs:
       - name: Build prune
         run: |
           cd ./prune
-          v -prod -os linux -o prune_linux build main.v
+          make linux
 
       - uses: actions/upload-artifact@v2
         with:
           name: linux
-          path: ./prune/prune_linux
+          path: ./prune/bin/prune_linux
           if-no-files-found: error
 
   windows:
@@ -58,12 +58,12 @@ jobs:
         run: |
           $env:path += ";$(get-location)"
           cd ./prune
-          v -prod -os windows -o prune_win build main.v
+          make windows
 
       - uses: actions/upload-artifact@v2
         with:
           name: windows
-          path: ./prune/prune_win.exe
+          path: ./prune/bin/prune_win.exe
           if-no-files-found: error
 
   macos:
@@ -87,12 +87,12 @@ jobs:
       - name: Build prune
         run: |
           cd ./prune
-          v -prod -os macos -o prune_osx build main.v
+          make macos
 
       - uses: actions/upload-artifact@v2
         with:
           name: macos
-          path: ./prune/prune_osx
+          path: ./prune/bin/prune_osx
           if-no-files-found: error
 
   release:
