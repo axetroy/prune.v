@@ -133,7 +133,8 @@ fn main() {
 		return
 	}
 	cpus_num := nr_cpus()
-	mut pool := new_pool(cpus_num * 255)
+	// this is a bug and it should be fix in V upstream
+	mut pool := new_pool(cpus_num * 64)
 	start := now().unix_time_milli()
 	mut result := Result{
 		check_mode: is_check_only
