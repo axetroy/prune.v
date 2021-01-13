@@ -134,6 +134,7 @@ fn main() {
 	}
 	cpus_num := nr_cpus()
 	// this is a bug and it should be fix in V upstream
+	// ref: https://github.com/vlang/v/issues/6870
 	mut pool := new_pool(cpus_num * 64)
 	start := now().unix_time_milli()
 	mut result := Result{
