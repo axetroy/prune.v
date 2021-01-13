@@ -46,10 +46,10 @@ SOURCE CODE:
 struct Result {
 	check_mode bool
 mut:
-	folder     int // folder count
-	file       int // file count
-	size       int // the prune size
-	mtx        &sync.RwMutex // r/w lock
+	folder int // folder count
+	file   int // file count
+	size   int // the prune size
+	mtx    &sync.RwMutex // r/w lock
 }
 
 fn (mut r Result) increase_size(i int) {
