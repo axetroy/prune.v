@@ -5,7 +5,7 @@ import sync { RwMutex }
 import flag
 import time { now }
 import runtime { nr_cpus }
-import pool { new_pool }
+// import pool { new_pool }
 
 const (
 	version    = 'v0.2.7'
@@ -49,34 +49,27 @@ mut:
 	folder int // folder count
 	file   int // file count
 	size   int // the prune size
-	mtx    &sync.RwMutex // r/w lock
 }
 
-fn (mut r Result) increase_size(i int) {
-	r.mtx.w_lock()
-	defer {
-		r.mtx.w_unlock()
+fn (shared r Result) increase_size(i int) {
+	lock r{
+		r.size += i
 	}
-	r.size += i
 }
 
-fn (mut r Result) increase_folder(i int) {
-	r.mtx.w_lock()
-	defer {
-		r.mtx.w_unlock()
+fn (shared r Result) increase_folder(i int) {
+	lock r{
+		r.folder += i
 	}
-	r.folder += i
 }
 
-fn (mut r Result) increase_file(i int) {
-	r.mtx.w_lock()
-	defer {
-		r.mtx.w_unlock()
+fn (shared r Result) increase_file(i int) {
+	lock r{
+		r.file += i
 	}
-	r.file += i
 }
 
-fn calc_size(filepath string, mut result Result) int {
+fn calc_size(filepath string, shared result Result) int {
 	if is_dir(filepath) {
 		files := ls(filepath) or { panic(err) }
 		result.increase_folder(1)
@@ -84,7 +77,7 @@ fn calc_size(filepath string, mut result Result) int {
 		for file in files {
 			target := join_path(filepath, file)
 			if is_dir(target) {
-				size += calc_size(target, mut result)
+				size += calc_size(target, shared result)
 			} else if is_link(target) {
 				result.increase_file(1)
 				size += file_size(target)
@@ -106,15 +99,18 @@ fn main() {
 	is_help := fp.bool('help', 0, false, 'prine help information')
 	is_version := fp.bool('version', 0, false, 'prine version information')
 	is_check_only := fp.bool('check-only', 0, false, 'where check prune only without any file remove')
+
 	additional_args := fp.finalize() or {
 		eprintln(err)
 		print_help()
 		return
 	}
+
 	if is_help {
 		print_help()
 		return
 	}
+
 	if is_version {
 		println(version)
 		return
@@ -132,34 +128,28 @@ fn main() {
 		print_help()
 		return
 	}
-	cpus_num := nr_cpus()
+	// cpus_num := nr_cpus()
 	// this is a bug and it should be fix in V upstream
 	// ref: https://github.com/vlang/v/issues/6870
-	mut pool := new_pool(cpus_num * 64)
+	// mut pool := new_pool(cpus_num)
 	start := now().unix_time_milli()
-	mut result := Result{
+	shared result := Result{
 		check_mode: is_check_only
 		size: 0
 		folder: 0
 		file: 0
-		mtx: sync.new_rwmutex()
 	}
 	for _, target in targets {
-		pool.add(1)
-		go walk(target, mut pool, mut &result)
+					walk(target, shared result)
 	}
-	pool.wait()
 	end := now().unix_time_milli()
 	diff_time := end - start
 	println('prune $result.folder folder & $result.file file & $result.size Bytes')
 	println('finish in $diff_time ms')
 }
 
-fn remove_dir(dir string, mut pool pool.Pool, mut result Result) {
-	defer {
-		pool.done()
-	}
-	size := calc_size(dir, mut result)
+fn remove_dir(dir string, shared result Result) {
+	size := calc_size(dir, shared result)
 	if result.check_mode == false {
 		rmdir(dir) or { panic(err) }
 	}
@@ -168,11 +158,8 @@ fn remove_dir(dir string, mut pool pool.Pool, mut result Result) {
 	result.increase_size(size)
 }
 
-fn remove_file(file string, mut pool pool.Pool, mut result Result) {
-	defer {
-		pool.done()
-	}
-	size := calc_size(file, mut result)
+fn remove_file(file string, shared result Result) {
+	size := calc_size(file, shared result)
 	if result.check_mode == false {
 		rm(file) or { panic(err) }
 	}
@@ -181,27 +168,21 @@ fn remove_file(file string, mut pool pool.Pool, mut result Result) {
 	result.increase_size(size)
 }
 
-fn walk(dir string, mut pool pool.Pool, mut result Result) {
-	defer {
-		pool.done()
-	}
+fn walk(dir string, shared result Result) {
 	files := ls(dir) or { panic(err) }
 	for file in files {
 		filepath := join_path(dir, file)
 		if is_dir(filepath) {
 			if file in dir_prune {
-				pool.add(1)
-				go remove_dir(filepath, mut pool, mut result)
+				remove_dir(filepath, shared result)
 			} else if file in dir_ignore {
 				continue
 			} else {
-				pool.add(1)
-				go walk(filepath, mut pool, mut result)
+									walk(filepath, shared result)
 			}
 		} else if is_file(filepath) {
 			if file in file_prune {
-				pool.add(1)
-				go remove_file(filepath, mut pool, mut result)
+				remove_file(filepath, shared result)
 			}
 		}
 	}

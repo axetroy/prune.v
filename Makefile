@@ -4,7 +4,7 @@ default:
 	make linux
 
 format:
-	v fmt -w *.v
+	v fmt -w **/*.v
 
 format-check:
 	v fmt -c *.v

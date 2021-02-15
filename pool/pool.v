@@ -3,7 +3,7 @@ module pool
 import sync
 
 struct Pool {
-	size  int
+	size int
 mut:
 	queue chan int
 	wg    &sync.WaitGroup
@@ -24,13 +24,13 @@ pub fn new_pool(size int) &Pool {
 
 pub fn (mut p Pool) add(delta int) {
 	for i := 0; i < delta; i++ {
-		p.queue <- 1
+		p.queue <- 1 or { panic(err) }
 	}
 	p.wg.add(delta)
 }
 
 pub fn (mut p Pool) done() {
-	s := <-p.queue
+	s := <-p.queue or { panic(err) }
 	if s > 0 {
 		// empty block
 	}
@@ -38,5 +38,6 @@ pub fn (mut p Pool) done() {
 }
 
 pub fn (mut p Pool) wait() {
+	p.queue.close()
 	p.wg.wait()
 }
