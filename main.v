@@ -3,7 +3,7 @@ module main
 import os { ls, join_path, getwd, is_dir, is_file, rmdir, rm, file_size }
 import flag
 import time { now }
-import runtime
+// import runtime
 // import pool { new_pool }
 
 const (
