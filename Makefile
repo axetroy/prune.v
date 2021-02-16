@@ -7,7 +7,7 @@ format:
 	v fmt -w **/*.v
 
 format-check:
-	v fmt -c *.v
+	v fmt -c **/*.v
 
 windows:
 	v -prod -os windows -o ./bin/prune_win main.v

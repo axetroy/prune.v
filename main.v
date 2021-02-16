@@ -78,10 +78,7 @@ fn calc_size(filepath string, shared result Result) int {
 			target := join_path(filepath, file)
 			if is_dir(target) {
 				size += calc_size(target, shared result)
-			} else if is_link(target) {
-				result.increase_file(1)
-				size += file_size(target)
-			} else if is_file(target) {
+			} else {
 				result.increase_file(1)
 				size += file_size(target)
 			}
