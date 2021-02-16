@@ -1,10 +1,9 @@
 module main
 
-import os { ls, join_path, getwd, is_dir, is_file, is_link, rmdir, rm, file_size }
-import sync { RwMutex }
+import os { ls, join_path, getwd, is_dir, is_file, rmdir, rm, file_size }
 import flag
 import time { now }
-import runtime { nr_cpus }
+import runtime
 // import pool { new_pool }
 
 const (
@@ -52,19 +51,19 @@ mut:
 }
 
 fn (shared r Result) increase_size(i int) {
-	lock r{
+	lock r {
 		r.size += i
 	}
 }
 
 fn (shared r Result) increase_folder(i int) {
-	lock r{
+	lock r {
 		r.folder += i
 	}
 }
 
 fn (shared r Result) increase_file(i int) {
-	lock r{
+	lock r {
 		r.file += i
 	}
 }
@@ -137,7 +136,7 @@ fn main() {
 		file: 0
 	}
 	for _, target in targets {
-					walk(target, shared result)
+		walk(target, shared result)
 	}
 	end := now().unix_time_milli()
 	diff_time := end - start
@@ -175,7 +174,7 @@ fn walk(dir string, shared result Result) {
 			} else if file in dir_ignore {
 				continue
 			} else {
-									walk(filepath, shared result)
+				walk(filepath, shared result)
 			}
 		} else if is_file(filepath) {
 			if file in file_prune {

@@ -4,10 +4,10 @@ default:
 	make linux
 
 format:
-	v fmt -w **/*.v
+	v fmt -w *.v **/*.v
 
 format-check:
-	v fmt -c **/*.v
+	v fmt -c *.v **/*.v
 
 windows:
 	v -prod -os windows -o ./bin/prune_win main.v
