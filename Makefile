@@ -10,10 +10,10 @@ format-check:
 	@v fmt -c *.v **/*.v
 
 windows:
-	@v -prod -os windows -o ./bin/prune_win main.v
+	@v -prod -os windows -m64 -o ./bin/prune_win main.v
 
 macos:
-	@v -prod -os macos -o ./bin/prune_osx main.v
+	@v -prod -os macos -m64 -o ./bin/prune_osx main.v
 
 linux:
-	@v -prod -os linux -o ./bin/prune_linux main.v
+	@v -prod -os linux -m64 -o ./bin/prune_linux main.v
