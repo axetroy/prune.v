@@ -1,7 +1,7 @@
 default:
-	make windows
-	make macos
-	make linux
+	@make windows
+	@make macos
+	@make linux
 
 format:
 	@v fmt -w *.v **/*.v

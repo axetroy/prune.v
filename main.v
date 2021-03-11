@@ -1,6 +1,6 @@
 module main
 
-import os { ls, join_path, getwd, is_dir, is_file, rmdir, rm, file_size }
+import os { file_size, getwd, is_dir, is_file, join_path, ls, rm, rmdir }
 import flag
 import time { now }
 // import runtime
@@ -11,11 +11,11 @@ const (
 	dir_ignore = ['.git', '.github', '.idea', '.vscode']
 	dir_prune  = ['node_modules', 'bower_components', '.temp', '.dist']
 	file_prune = [
-		/* macos */
+		// macos
 		'.DS_Store',
 		'.AppleDouble',
 		'.LSOverride',
-		/* windows */
+		// windows
 		'Thumbs.db',
 		'Thumbs.db:encryptable',
 		'ehthumbs.db',
