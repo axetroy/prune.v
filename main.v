@@ -140,7 +140,7 @@ fn main() {
 	}
 	end := now().unix_time_milli()
 	diff_time := end - start
-	rlock result{
+	rlock result {
 		println('prune $result.folder folder & $result.file file & $result.size Bytes')
 		println('finish in $diff_time ms')
 	}
