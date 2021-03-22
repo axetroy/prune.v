@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: vlang/v
-          ref: 6a7ef4f5b2bba2a210839e1be1a2bb926938af5c
+          ref: 400b4027c9953729d83ab5910653716474c6b770
 
       - name: Build V
         run: |
@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: vlang/v
-          ref: 6a7ef4f5b2bba2a210839e1be1a2bb926938af5c
+          ref: 400b4027c9953729d83ab5910653716474c6b770
 
       - name: Build V
         run: |
@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: vlang/v
-          ref: 6a7ef4f5b2bba2a210839e1be1a2bb926938af5c
+          ref: 400b4027c9953729d83ab5910653716474c6b770
 
       - name: Build V
         run: |

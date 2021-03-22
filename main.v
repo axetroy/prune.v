@@ -47,10 +47,10 @@ struct Result {
 mut:
 	folder int // folder count
 	file   int // file count
-	size   int // the prune size
+	size   u64 // the prune size
 }
 
-fn (shared r Result) increase_size(i int) {
+fn (shared r Result) increase_size(i u64) {
 	lock r {
 		r.size += i
 	}
@@ -68,24 +68,24 @@ fn (shared r Result) increase_file(i int) {
 	}
 }
 
-fn calc_size(filepath string, shared result Result) int {
+fn calc_size(filepath string, shared result Result) u64 {
 	if is_dir(filepath) {
 		files := ls(filepath) or { panic(err) }
 		result.increase_folder(1)
-		mut size := 0
+		mut size := u64(0)
 		for file in files {
 			target := join_path(filepath, file)
 			if is_dir(target) {
 				size += calc_size(target, shared result)
 			} else {
 				result.increase_file(1)
-				size += file_size(target)
+				size += u64(file_size(target))
 			}
 		}
 		return size
 	} else {
 		result.increase_file(1)
-		return file_size(filepath)
+		return u64(file_size(filepath))
 	}
 }
 
@@ -140,8 +140,10 @@ fn main() {
 	}
 	end := now().unix_time_milli()
 	diff_time := end - start
-	println('prune $result.folder folder & $result.file file & $result.size Bytes')
-	println('finish in $diff_time ms')
+	rlock result{
+		println('prune $result.folder folder & $result.file file & $result.size Bytes')
+		println('finish in $diff_time ms')
+	}
 }
 
 fn remove_dir(dir string, shared result Result) {
