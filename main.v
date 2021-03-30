@@ -1,6 +1,6 @@
 module main
 
-import os { file_size, getwd, is_dir, is_file, join_path, ls, rm, rmdir }
+import os { file_size, getwd, is_dir, is_file, join_path, ls, rm, rmdir_all }
 import flag
 import time { now }
 // import runtime
@@ -149,7 +149,7 @@ fn main() {
 fn remove_dir(dir string, shared result Result) {
 	size := calc_size(dir, shared result)
 	if result.check_mode == false {
-		rmdir(dir) or { panic(err) }
+		rmdir_all(dir) or { panic(err) }
 	}
 	println(dir)
 	result.increase_folder(1)
