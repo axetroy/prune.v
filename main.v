@@ -7,7 +7,7 @@ import time { now }
 // import pool { new_pool }
 
 const (
-	version = 'v0.2.12'
+	version = 'v0.2.13'
 	rules   = $embed_file('./rules')
 )
 

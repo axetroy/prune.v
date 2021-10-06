@@ -15,18 +15,23 @@ The tool will traverse the target directory, look for files/directories that can
 - [x] Written in [V](https://github.com/vlang/v)
 - [x] Coroutine support, make full use of CPU. It's fast
 
-## Installation
+### Install
 
-If you are using `unix` style system(`macOS`/`Linux`). enter the command line to install.
+1. Shell (Mac/Linux)
 
-```shell
-# install the latest version
-curl -fsSL https://raw.githubusercontent.com/axetroy/prune/main/install.sh | bash
-# install the specified version
-curl -fsSL https://raw.githubusercontent.com/axetroy/prune/main/install.sh | bash -s v0.2.11
+```bash
+curl -fsSL https://github.com/release-lab/install/raw/master/install.sh | bash -s axetroy/prune
 ```
 
-Or download [the release file](https://github.com/axetroy/prune/releases) for your platform and put it to `$PATH` folder.
+2. PowerShell (Windows):
+
+```powershell
+$repo="axetroy/prune";iwr https://github.com/release-lab/install/raw/master/install.ps1 -useb | iex
+```
+
+3. [Github release page](https://github.com/axetroy/prune/releases) (All platforms)
+
+download the executable file and put the executable file to `$PATH`
 
 ## Usage
 
