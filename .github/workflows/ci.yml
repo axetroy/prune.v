@@ -30,7 +30,7 @@ jobs:
         run: |
           cd ./prune
           make linux
-          tar czf prune_linux_amd64.tar.gz ./bin/prune
+          tar czf prune_linux_amd64.tar.gz --directory=./bin ./bin/prune
 
       - uses: actions/upload-artifact@v2
         with:
@@ -60,7 +60,7 @@ jobs:
           $env:path += ";$(get-location)"
           cd ./prune
           make windows
-          tar czf prune_windows_amd64.tar.gz ./bin/prune.exe
+          tar czf prune_windows_amd64.tar.gz --directory=./bin ./bin/prune.exe
 
       - uses: actions/upload-artifact@v2
         with:
@@ -90,7 +90,7 @@ jobs:
         run: |
           cd ./prune
           make macos
-          tar czf prune_darwin_amd64.tar.gz ./bin/prune
+          tar czf prune_darwin_amd64.tar.gz --directory=./bin ./bin/prune
 
       - uses: actions/upload-artifact@v2
         with:
