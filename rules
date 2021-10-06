@@ -1,0 +1,29 @@
+# This is a ruler files for prune
+# I: Ignore
+# F: File
+# D: Directory
+
+# ignore folder
+I .git
+I .github
+I .idea
+I .vscode
+
+# === prune file ===
+
+# macos
+F .DS_Store
+F .AppleDouble
+F .LSOverride
+# windows
+F Thumbs.db
+F Thumbs.db:encryptable
+F ehthumbs.db
+F ehthumbs_vista.db
+
+# === prune folder ===
+
+D node_modules
+D bower_components
+D .temp
+D .dist

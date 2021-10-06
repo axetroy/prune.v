@@ -1,26 +1,14 @@
 module main
 
-import os { file_size, getwd, is_abs_path, is_dir, is_file, join_path, ls, rm, rmdir_all }
+import os
 import flag
 import time { now }
 // import runtime
 // import pool { new_pool }
 
 const (
-	version    = 'v0.2.12'
-	dir_ignore = ['.git', '.github', '.idea', '.vscode', '.idea']
-	dir_prune  = ['node_modules', 'bower_components', '.temp', '.dist']
-	file_prune = [
-		// macos
-		'.DS_Store',
-		'.AppleDouble',
-		'.LSOverride',
-		// windows
-		'Thumbs.db',
-		'Thumbs.db:encryptable',
-		'ehthumbs.db',
-		'ehthumbs_vista.db',
-	]
+	version = 'v0.2.12'
+	rules   = $embed_file('./rules')
 )
 
 fn print_help() {
@@ -42,51 +30,127 @@ SOURCE CODE:
 ')
 }
 
+struct Rule {
+pub mut:
+	dir_ignore []string
+	dir_prune  []string
+	file_prune []string
+}
+
 struct Result {
 	check_mode bool
+pub:
+	rule Rule
 mut:
 	folder int // folder count
 	file   int // file count
 	size   u64 // the prune size
 }
 
-fn (shared r Result) increase_size(i u64) {
-	lock r {
-		r.size += i
-	}
+fn (mut r Result) increase_size(i u64) {
+	r.size += i
 }
 
-fn (shared r Result) increase_folder(i int) {
-	lock r {
-		r.folder += i
-	}
+fn (mut r Result) increase_folder(i int) {
+	r.folder += i
 }
 
-fn (shared r Result) increase_file(i int) {
-	lock r {
-		r.file += i
-	}
+fn (mut r Result) increase_file(i int) {
+	r.file += i
 }
 
-fn calc_size(filepath string, shared result Result) u64 {
-	if is_dir(filepath) {
-		files := ls(filepath) or { panic(err) }
-		result.increase_folder(1)
+fn calc_size(filepath string, mut result Result) ?u64 {
+	if os.is_dir(filepath) {
+		files := os.ls(filepath) ?
 		mut size := u64(0)
 		for file in files {
-			target := join_path(filepath, file)
-			if is_dir(target) {
-				size += calc_size(target, shared result)
-			} else {
-				result.increase_file(1)
-				size += u64(file_size(target))
-			}
+			target := os.join_path(filepath, file)
+			size += calc_size(target, mut result) ?
 		}
 		return size
+	} else if os.is_file(filepath) {
+		return os.file_size(filepath)
 	} else {
-		result.increase_file(1)
-		return u64(file_size(filepath))
+		return u64(0)
 	}
+}
+
+fn remove_dir(dir string, mut result Result) ? {
+	size := calc_size(dir, mut result) ?
+	if result.check_mode == false {
+		os.rmdir_all(dir) ?
+	}
+	println(dir)
+	result.increase_folder(1)
+	result.increase_size(size)
+}
+
+fn remove_file(file string, mut result Result) ? {
+	size := calc_size(file, mut result) ?
+	if result.check_mode == false {
+		os.rm(file) ?
+	}
+	println(file)
+	result.increase_file(1)
+	result.increase_size(size)
+}
+
+fn walk(dir string, mut result Result) ? {
+	files := os.ls(dir) ?
+	for file in files {
+		filepath := os.join_path(dir, file)
+		if os.is_dir(filepath) {
+			if file in result.rule.dir_prune {
+				remove_dir(filepath, mut result) ?
+			} else if file in result.rule.dir_ignore {
+				continue
+			} else {
+				walk(filepath, mut result) ?
+			}
+		} else if os.is_file(filepath) {
+			if file in result.rule.file_prune {
+				remove_file(filepath, mut result) ?
+			}
+		}
+	}
+}
+
+fn parse_rules(rules string) Rule {
+	mut rule := Rule{
+		dir_ignore: []string{}
+		dir_prune: []string{}
+		file_prune: []string{}
+	}
+
+	lines := rules.split_into_lines()
+
+	for l in lines {
+		line := l.trim_space()
+
+		// empty line
+		if line == '' {
+			continue
+		}
+
+		// comment line
+		if line.starts_with('#') {
+			continue
+		}
+
+		if line.starts_with('I ') {
+			rule.dir_ignore << line.trim_left('I ').trim_space()
+		}
+
+		if line.starts_with('D ') {
+			rule.dir_prune << line.trim_left('D ').trim_space()
+		}
+
+		if line.starts_with('F ') {
+			rule.file_prune << line.trim_left('F ').trim_space()
+		}
+	}
+
+	return rule
 }
 
 fn main() {
@@ -112,12 +176,12 @@ fn main() {
 		return
 	}
 	mut targets := []string{}
-	cwd := getwd()
+	cwd := os.getwd()
 	for _, dir in additional_args {
-		if is_abs_path(dir) {
+		if os.is_abs_path(dir) {
 			targets << dir
 		} else {
-			targets << join_path(cwd, dir)
+			targets << os.join_path(cwd, dir)
 		}
 	}
 	if targets.len < 1 {
@@ -129,59 +193,19 @@ fn main() {
 	// ref: https://github.com/vlang/v/issues/6870
 	// mut pool := new_pool(cpus_num)
 	start := now().unix_time_milli()
-	shared result := Result{
+	mut result := Result{
 		check_mode: is_check_only
 		size: 0
 		folder: 0
 		file: 0
+		rule: parse_rules(rules.to_string())
 	}
+
 	for _, target in targets {
-		walk(target, shared result)
+		walk(target, mut result) or { panic(err) }
 	}
 	end := now().unix_time_milli()
 	diff_time := end - start
-	rlock result {
-		println('prune $result.folder folder & $result.file file & $result.size Bytes')
-		println('finish in $diff_time ms')
-	}
-}
-
-fn remove_dir(dir string, shared result Result) {
-	size := calc_size(dir, shared result)
-	if result.check_mode == false {
-		rmdir_all(dir) or { panic(err) }
-	}
-	println(dir)
-	result.increase_folder(1)
-	result.increase_size(size)
-}
-
-fn remove_file(file string, shared result Result) {
-	size := calc_size(file, shared result)
-	if result.check_mode == false {
-		rm(file) or { panic(err) }
-	}
-	println(file)
-	result.increase_file(1)
-	result.increase_size(size)
-}
-
-fn walk(dir string, shared result Result) {
-	files := ls(dir) or { panic(err) }
-	for file in files {
-		filepath := join_path(dir, file)
-		if is_dir(filepath) {
-			if file in dir_prune {
-				remove_dir(filepath, shared result)
-			} else if file in dir_ignore {
-				continue
-			} else {
-				walk(filepath, shared result)
-			}
-		} else if is_file(filepath) {
-			if file in file_prune {
-				remove_file(filepath, shared result)
-			}
-		}
-	}
+	println('prune $result.folder folder & $result.file file & $result.size Bytes')
+	println('finish in $diff_time ms')
 }
