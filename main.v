@@ -8,7 +8,7 @@ import time { now }
 
 const (
 	version = 'v0.2.13'
-	rules   = $embed_file('./rules')
+	rules   = $embed_file('rules.txt')
 )
 
 fn print_help() {
