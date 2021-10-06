@@ -35,7 +35,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: linux_amd64
-          path: prune_linux_amd64.tar.gz
+          path: ./prune/prune_linux_amd64.tar.gz
           if-no-files-found: error
 
   windows:
@@ -65,7 +65,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: windows_amd64
-          path: prune_windows_amd64.tar.gz
+          path: ./prune/prune_windows_amd64.tar.gz
           if-no-files-found: error
 
   macos:
@@ -95,7 +95,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: darwin_amd64
-          path: prune_darwin_amd64.tar.gz
+          path: ./prune/prune_darwin_amd64.tar.gz
           if-no-files-found: error
 
   release:
