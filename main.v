@@ -1,6 +1,6 @@
 module main
 
-import os { file_size, getwd, is_dir, is_file, join_path, ls, rm, rmdir_all, is_abs_path }
+import os { file_size, getwd, is_abs_path, is_dir, is_file, join_path, ls, rm, rmdir_all }
 import flag
 import time { now }
 // import runtime

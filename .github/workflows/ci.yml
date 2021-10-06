@@ -30,11 +30,12 @@ jobs:
         run: |
           cd ./prune
           make linux
+          tar czf prune_linux_amd64.tar.gz ./bin/prune
 
       - uses: actions/upload-artifact@v2
         with:
-          name: linux
-          path: ./prune/bin/prune_linux
+          name: linux_amd64
+          path: prune_linux_amd64.tar.gz
           if-no-files-found: error
 
   windows:
@@ -59,11 +60,12 @@ jobs:
           $env:path += ";$(get-location)"
           cd ./prune
           make windows
+          tar czf prune_windows_amd64.tar.gz ./bin/prune.exe
 
       - uses: actions/upload-artifact@v2
         with:
-          name: windows
-          path: ./prune/bin/prune_win.exe
+          name: windows_amd64
+          path: prune_windows_amd64.tar.gz
           if-no-files-found: error
 
   macos:
@@ -88,11 +90,12 @@ jobs:
         run: |
           cd ./prune
           make macos
+          tar czf prune_darwin_amd64.tar.gz ./bin/prune
 
       - uses: actions/upload-artifact@v2
         with:
-          name: macos
-          path: ./prune/bin/prune_osx
+          name: darwin_amd64
+          path: prune_darwin_amd64.tar.gz
           if-no-files-found: error
 
   release:
@@ -103,29 +106,22 @@ jobs:
     steps:
       - uses: actions/download-artifact@v2
         with:
-          name: linux
+          name: linux_amd64
 
       - uses: actions/download-artifact@v2
         with:
-          name: windows
+          name: windows_amd64
 
       - uses: actions/download-artifact@v2
         with:
-          name: macos
-
-      - name: tar
-        run: |
-          mv prune_linux prune && tar czf prune_linux.tar.gz prune && rm prune
-          mv prune_osx prune && tar czf prune_osx.tar.gz prune && rm prune
-          mv prune_win.exe prune.exe && tar czf prune_win.tar.gz prune.exe && rm prune.exe
-          ls -lh
+          name: darwin_amd64
 
       - uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           files: |
-            prune_linux.tar.gz
-            prune_osx.tar.gz
-            prune_win.tar.gz
+            prune_windows_amd64.tar.gz
+            prune_linux_amd64.tar.gz
+            prune_darwin_amd64.tar.gz
           draft: false
