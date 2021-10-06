@@ -7,7 +7,7 @@ import time { now }
 // import pool { new_pool }
 
 const (
-	version    = 'v0.2.11'
+	version    = 'v0.2.12'
 	dir_ignore = ['.git', '.github', '.idea', '.vscode', '.idea']
 	dir_prune  = ['node_modules', 'bower_components', '.temp', '.dist']
 	file_prune = [
