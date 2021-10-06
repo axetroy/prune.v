@@ -111,7 +111,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           files: |
-            prune_windows_amd64.tar.gz
-            prune_linux_amd64.tar.gz
-            prune_darwin_amd64.tar.gz
+            ./prune/prune_windows_amd64.tar.gz
+            ./prune/prune_linux_amd64.tar.gz
+            ./prune/prune_darwin_amd64.tar.gz
           draft: false
