@@ -105,16 +105,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v2
-        with:
-          name: linux_amd64
-
-      - uses: actions/download-artifact@v2
-        with:
-          name: windows_amd64
-
-      - uses: actions/download-artifact@v2
-        with:
-          name: darwin_amd64
 
       - uses: softprops/action-gh-release@v1
         env:
