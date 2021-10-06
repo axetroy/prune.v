@@ -2,7 +2,7 @@ module main
 
 import os
 import flag
-import time { now }
+import time
 // import runtime
 // import pool { new_pool }
 
@@ -192,7 +192,7 @@ fn main() {
 	// this is a bug and it should be fix in V upstream
 	// ref: https://github.com/vlang/v/issues/6870
 	// mut pool := new_pool(cpus_num)
-	start := now().unix_time_milli()
+	start := time.now().unix_time_milli()
 	mut result := Result{
 		check_mode: is_check_only
 		size: 0
@@ -204,7 +204,7 @@ fn main() {
 	for _, target in targets {
 		walk(target, mut result) or { panic(err) }
 	}
-	end := now().unix_time_milli()
+	end := time.now().unix_time_milli()
 	diff_time := end - start
 	println('prune $result.folder folder and $result.file file, total size: $result.size Bytes')
 	println('finish in $diff_time ms')
