@@ -1,6 +1,6 @@
 module main
 
-import os { file_size, getwd, is_dir, is_file, join_path, ls, rm, rmdir_all }
+import os { file_size, getwd, is_dir, is_file, join_path, ls, rm, rmdir_all, is_abs_path }
 import flag
 import time { now }
 // import runtime
@@ -8,7 +8,7 @@ import time { now }
 
 const (
 	version    = 'v0.2.11'
-	dir_ignore = ['.git', '.github', '.idea', '.vscode']
+	dir_ignore = ['.git', '.github', '.idea', '.vscode', '.idea']
 	dir_prune  = ['node_modules', 'bower_components', '.temp', '.dist']
 	file_prune = [
 		// macos
