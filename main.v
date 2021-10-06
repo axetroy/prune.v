@@ -115,14 +115,14 @@ fn walk(dir string, mut result Result) ? {
 	}
 }
 
-fn parse_rules(rules string) Rule {
+fn parse_rules(r string) Rule {
 	mut rule := Rule{
 		dir_ignore: []string{}
 		dir_prune: []string{}
 		file_prune: []string{}
 	}
 
-	lines := rules.split_into_lines()
+	lines := r.split_into_lines()
 
 	for l in lines {
 		line := l.trim_space()
