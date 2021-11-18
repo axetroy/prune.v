@@ -8,7 +8,6 @@ import time
 
 const (
 	version = 'v0.2.13'
-	rules   = $embed_file('rules.txt')
 )
 
 fn print_help() {
@@ -188,6 +187,9 @@ fn main() {
 		print_help()
 		return
 	}
+
+	rules := $embed_file('./rules.txt')
+
 	// cpus_num := nr_cpus()
 	// this is a bug and it should be fix in V upstream
 	// ref: https://github.com/vlang/v/issues/6870
