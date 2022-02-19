@@ -19,7 +19,7 @@ USAGE:
 OPTIONS:
   --help        print help information
   --version     print version information
-  --check-only  where check prune only without any file remove
+  --delete      whether to delete the file
 
 EXAMPLE:
   prune ./dir1 ./dir2 ./dir3
@@ -157,7 +157,7 @@ fn main() {
 	fp.skip_executable()
 	is_help := fp.bool('help', 0, false, 'prine help information')
 	is_version := fp.bool('version', 0, false, 'prine version information')
-	is_check_only := fp.bool('check-only', 0, false, 'where check prune only without any file remove')
+	is_delete := fp.bool('delete', 0, false, 'where check prune only without any file remove')
 
 	additional_args := fp.finalize() or {
 		eprintln(err)
@@ -196,7 +196,7 @@ fn main() {
 	// mut pool := new_pool(cpus_num)
 	start := time.now().unix_time_milli()
 	mut result := Result{
-		check_mode: is_check_only
+		check_mode: !is_delete
 		size: 0
 		folder: 0
 		file: 0
