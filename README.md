@@ -45,7 +45,7 @@ USAGE:
 OPTIONS:
   --help        print help information
   --version     print version information
-  --check-only  where check prune only without any file remove
+  --delete      whether to delete the file
 
 EXAMPLE:
   prune ./dir1 ./dir2 ./dir3
