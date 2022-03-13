@@ -17,19 +17,25 @@ The tool will traverse the target directory, look for files/directories that can
 
 ### Install
 
-1. Shell (Mac/Linux)
+1. [Cask](https://github.com/axetroy/cask.rs)
+
+   ```bash
+   cask install github.com/axetroy/prune.v
+   ```
+
+2. Shell (Mac/Linux)
 
    ```bash
    curl -fsSL https://github.com/release-lab/install/raw/v1/install.sh | bash -s -- -r=axetroy/prune.v -r=prune
    ```
 
-2. PowerShell (Windows):
+3. PowerShell (Windows):
 
    ```powershell
    $r="axetroy/prune.v";$e="prune";iwr https://github.com/release-lab/install/raw/v1/install.ps1 -useb | iex
    ```
 
-3. [Github release page](https://github.com/axetroy/prune/releases)
+4. [Github release page](https://github.com/axetroy/prune/releases)
 
    download the executable file and put the executable file to `$PATH`
 
