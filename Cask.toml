@@ -1,0 +1,19 @@
+[package]
+name = "github.com/axetroy/prune.v"
+bin = "prune"
+authors = ["Axetroy <axetroy.dev@gmail.com>"]
+keywords = []
+repository = "https://github.com/axetroy/prune.v"
+description = """
+🚀 An extremely fast tool for prune your file-system written in V.
+"""
+license = "MIT"
+
+[darwin]
+x86_64 = { url = "https://github.com/axetroy/prune.v/releases/download/v{version}/prune_darwin_amd64.tar.gz" }
+
+[windows]
+x86_64 = { url = "https://github.com/axetroy/prune.v/releases/download/v{version}/prune_windows_amd64.tar.gz" }
+
+[linux]
+x86_64 = { url = "https://github.com/axetroy/prune.v/releases/download/v{version}/prune_linux_amd64.tar.gz" }
